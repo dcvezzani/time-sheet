@@ -1,0 +1,381 @@
+BUNDLE_GEMFILE=/Users/davidvezzani/rails-app/clf-002/Gemfile bundle exec rails new clf-004 -T
+
+cp /Users/davidvezzani/rails-app/clf-002/Gemfile /Users/davidvezzani/rails-app/clf-004
+rm Gemfile.lock
+bundle
+
+bundle install --binstubs
+
+./bin/rails g controller Welcome index
+
+./bin/rails generate devise:install
+./bin/rails generate devise User
+./bin/rails generate devise:views
+
+bundle exec rails generate migration add_roles_mask_to_users roles_mask:integer
+bundle exec rake db:migrate db:migrate:status
+
+./bin/rails generate steak:install
+./bin/rails generate steak:spec welcome
+
+./bin/rspec
+
+
+
+
+
+
+
+# ===== ARCHIVE
+
+bundle exec rails g scaffold ListingSummary logo:string title:string body:text listing_id:integer
+bundle exec rails g scaffold Advertiser::ShoppingCartItem name:string price:decimal item_id:integer
+bundle exec rails destroy scaffold ListingSummary
+
+bundle exec rails g migration add_month_to_advertiser_listing_ranges month:date
+bundle exec rails g migration remove_ranking_from_listings ranking:integer
+
+bundle exec rails g model ProspectusDocumentAssociation prospectus_document_id:integer listing_id:integer
+
+bundle exec rails g controller Advertiser::ProspectusDocument index show new edit create update destroy
+
+bundle exec rails g mailer FiduciaryMarketMailer
+
+bundle exec rake db:migrate db:migrate:status
+bundle exec rake routes > routes.txt
+
+# bundle exec rake db:migrate:down VERSION=20120831000251
+# bundle exec rake db:migrate VERSION=20120821222728
+
+
+
+
+bundle exec rails g controller Welcome index
+#rails g integration_test welcome/index
+#rails g integration_test root
+
+#rails generate steak:install
+rails generate steak:spec categories
+rails generate steak:spec layouts/application.html.erb
+
+rails g helper application
+rails g controller layouts/application
+rails destroy controller layouts/application
+rails g view layouts/application
+
+
+#rails destroy scaffold Associate
+#bundle exec rake db:migrate:down VERSION=20121201074421
+rails g scaffold Associate territory:text name:string title:string email:text calendar:text dropbox:text
+rails g scaffold AssociateProfile name:string location:text associate_id:integer
+rails g migration add_associate_id_to_associate_profiles associate_id:integer
+bundle exec rake db:migrate db:migrate:status
+bundle exec rake routes > routes.txt
+
+
+rails g scaffold Messages received_at:datetime sender_email:string title:string type:string
+rails g scaffold Messages received_at:datetime sender_email:string title:string type:string --webrat --force
+rails g scaffold Messages received_at:datetime email_to:string email_from:string title:string content:text type:string --force
+
+rails g scaffold ClientMessage received_at:datetime sender_email:string title:string type:string
+rails g scaffold AssociateMessage received_at:datetime sender_email:string title:string type:string
+rails g scaffold OtherMessage received_at:datetime sender_email:string title:string type:string
+class ClientMessage
+class AssociateMessage
+class OtherMessage
+
+rails generate steak:spec messages
+rails generate steak:spec messages/index_by_categories.html.erb
+
+rails g steak:spec associates/index.html.erb
+
+rails generate steak:spec messages/index.html.erb
+
+outgoing_message
+rails g scaffold OutgoingMessage email_to:string title:string content:text type:string
+bundle exec rake db:migrate db:migrate:status
+bundle exec rake routes > routes.txt
+
+attachment
+rails g scaffold Attachment name:text location:text message_id:integer
+
+attachable
+rails g migration add_attachable_id_and_attachable_type_to_attachments attachable_id:integer attachable_type:string
+rake db:migrate:down VERSION=20121205155933
+
+Message.destroy_all
+FactoryGirl.create_list(:client_message, 5)
+FactoryGirl.create_list(:associate_message, 7)
+FactoryGirl.create_list(:other_message, 3)
+
+
+rails generate steak:spec outgoing_messages/_form
+
+rails generate generator bootstrapped_index_partial
+rails generate generator bootstrapped_index_partial:common
+rails g bootstrapped_index_partial client_messages/index
+
+rails g bootstrapped_index_partial client_messages/index received_at:datetime email_from:string title:string
+rails g bootstrapped_index_partial:common client_messages/index received_at:datetime email_from:string title:string
+
+./bin/rails generate steak:spec rtf/generator/will_husband
+
+
+content = IO.read("work/sample.txt")
+content = IO.read("lib/docx/generator/will_husband.rb")
+content.scan(/\[\[[^\]]+\]\]/)
+
+[[self_full_name]]
+[[county-name]]
+[[marriage-status]]
+[[spouse_full_name]]
+
+[[number_of_children_string]]
+[[number_of_children]]
+
+[[child_001_full_name]]
+[[child_001_residence]]
+[[child_002_full_name]]
+[[child_002_residence]]
+[[child_003_full_name]]
+[[child_003_residence]]
+[[child_004_full_name]]
+[[child_004_residence]]
+[[child_005_full_name]]
+[[child_005_residence]]
+[[child_006_full_name]]
+[[child_006_residence]]
+
+[[spouse_full_name]]
+[[unknown_meta_data_001]]
+[[established_at]]
+[[unknown_meta_data_001]]
+[[executed_on]]
+[[spouse_full_name]]
+[[unknown_meta_data_001]]
+[[unknown_meta_data_001]]
+[[spouse_full_name]]
+[[spouse_full_name]]
+
+[[executor_001_unknown_meta_data_002]]
+[[executor_001_unknown_meta_data_003]]
+[[executor_001_unknown_meta_data_004]]
+[[executor_001_unknown_meta_data_005]]
+
+[[executor_002_unknown_meta_data_002]]
+[[executor_002_unknown_meta_data_003]]
+[[executor_002_unknown_meta_data_004]]
+[[executor_002_unknown_meta_data_005]]
+
+[[signed_at]]
+[[undersigner_full_name]]
+[[city]]
+[[executed_at]]
+
+Person
+full_name:string county_name:string marriage_status:string spouse_name:string address_01:string address_02:string relationship:string
+
+Settlor
+full_name:string county_name:string marriage_status:string spouse_name:string 
+
+Child
+full_name:string address_01:string address_02:string
+
+LegalDocument
+
+GenericTrust
+trust_label:string established_at:datetime 
+
+Executor
+relationship:string full_name:string address_01:string address_02:string
+
+Undersigner
+full_name:string
+
+Will
+executed_at:datetime signed_at:datetime location_city:string
+
+LegalDocumentAssociations
+parent_id:integer child_id:integer
+
+
+
+Person
+full_name:string marriage_status:string spouse_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string relationship:string gender:string
+
+LegalDocument
+label:string executed_at:datetime signed_at:datetime location_city:string established_at:datetime
+
+LegalDocumentAssociations
+parent_id:integer child_id:integer
+
+
+# ./bin/rails destroy scaffold Person
+./bin/rails g scaffold Person full_name:string marriage_status:string spouse_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string relationship:string
+
+./bin/rails g scaffold Settlor full_name:string marriage_status:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+
+# ./bin/rails destroy scaffold Child
+./bin/rails g scaffold Child full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+
+./bin/rails g scaffold Will executed_at:datetime signed_at:datetime location_city:string
+
+./bin/rails g scaffold GenericTrust label:string established_at:datetime
+
+
+./bin/rails g scaffold LegalDocument label:string executed_at:datetime signed_at:datetime location_city:string established_at:datetime
+
+./bin/rails g scaffold LegalDocumentAssociation parent_id:integer child_id:integer
+# ./bin/rails destroy scaffold SettlorChildAssociation
+# ActiveRecord::Base.connection.execute("drop table settlor_child_associations")
+./bin/rails g scaffold SettlorChildAssociation settlor_id:integer child_id:integer
+./bin/rails g scaffold SettlorDependentAssociation settlor_id:integer dependent_id:integer
+
+
+# ./bin/rake db:migrate:down VERSION=20121218145902
+# ./bin/rails destroy scaffold RelatedPersonAssociation
+./bin/rails g scaffold RelatedPersonAssociation legal_document_id:integer person_id:integer type:string
+./bin/rails g scaffold RelatedExecutorAssociation legal_document_id:integer person_id:integer
+./bin/rails g scaffold RelatedUndersignerAssociation legal_document_id:integer person_id:integer
+
+
+
+./bin/rake db:migrate db:migrate:status
+
+./bin/rails generate bootstrapped_index_partial legal_documents/index_by_type executed_at:datetime signed_at:datetime location_city:string established_at:datetime 
+
+./bin/rails g bootstrapped_index_partial wills/index executed_at:datetime signed_at:datetime location_city:string
+./bin/rails g bootstrapped_index_partial generic_trusts/index label:string established_at:datetime
+
+./bin/rails g scaffold Spouse full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g scaffold Executor relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g scaffold Undersigner relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g scaffold Children full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+
+./bin/rails g bootstrapped_index_partial settlors/index full_name:string marriage_status:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial children/index full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial spouses/index full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial executors/index relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial undersigners/index relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+
+./bin/rails g bootstrapped_index_partial children/index_related_people full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial spouses/index_related_people full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+
+./bin/rails g bootstrapped_index_partial executors/index_related_material relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial undersigners/index_related_material relationship:string full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial generic_trusts/index_related_material label:string established_at:datetime
+
+
+# user = FactoryGirl.build(:user, first_name: "Joe")
+Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+
+DatabaseCleaner.clean_with :truncation, {:except => %w[users templates]}
+# Person.connection.execute("truncate table legal_document_associations")
+
+FactoryGirl.create_list(:person, 10, type: "Settlor")
+FactoryGirl.create_list(:person, 10, type: "Executor")
+FactoryGirl.create_list(:person, 10, type: "Undersigner")
+
+settlor = Settlor.first
+# child = FactoryGirl.create(:child)
+# settlor.children << child
+# settlor.spouse
+
+Settlor.all.each do |settlor|
+  settlor.children = FactoryGirl.create_list(:child, rand(5))
+  if(settlor.marriage_status == "married")
+    settlor.spouse = FactoryGirl.create(:spouse, gender: ((settlor.gender == "male") ? "female" : "male") )
+  end
+  settlor.save!
+
+  (0...rand(5)).each do
+    executors = (0...rand(3)).map{Executor.all[rand(Executor.count)]}
+    undersigners = (0...rand(3)).map{Undersigner.all[rand(Undersigner.count)]}
+
+    #generic_trust = FactoryGirl.create(:generic_trust, settlor_id: settlor.id, executor_id: executor.id, undersigner_id: undersigner.id)
+    generic_trust = FactoryGirl.create(:generic_trust, settlor_id: settlor.id)
+    #generic_trust.executors = executors
+    #generic_trust.undersigners = undersigners
+    #generic_trust.save!
+
+    will = FactoryGirl.create(:will, settlor_id: settlor.id)
+    cnt = 0
+    will.executors = executors.each{|x| x.priority = (cnt+=1); x.save!}
+    will.undersigners = undersigners
+
+    will.related_documents << generic_trust
+    will.save!
+  end
+end
+
+Settlor.joins{wills}.group{self.id}.select{[self.id, count(self.id)]}.map{|x| "#{x.id}:#{x.count}"}
+settlor = Settlor.find 6
+settlor.wills.each{|x| x.printing = true; x.audience = :married_spouse }
+settlor.wills.map(&:valid?)
+invalid_wills = settlor.wills.select{|x| !x.valid?}
+puts invalid_wills.map{|x| x.errors.full_messages}
+invalid_wills.map(&:id)
+
+settlor.wills.first.executors.clear
+settlor.wills.first.executors << Executor.all[rand(Executor.count)]
+
+settlor.wills.first.undersigners.clear
+settlor.wills.first.undersigners << Undersigner.all[rand(Undersigner.count)]
+
+
+settlor = Settlor.all[rand(Settlor.count)]
+settlor.legal_documents.count
+
+Settlor.joins{wills}.group{self.id}.select{count(self.id)}.map(&:count)
+Settlor.joins{wills}.group{self.id}.select{[self.id, count(self.id)]}.map{|x| "#{x.id}:#{x.count}"}
+Settlor.joins{children}.group{self.id}.select{[self.id, count(self.id)]}.map{|x| "#{x.id}:#{x.count}"}
+settlor = Settlor.find 7
+settlor.legal_documents.count
+settlor.wills.count
+
+will = settlor.wills.first
+will.related_documents
+
+settlor.children
+settlor.spouse = FactoryGirl.create(:spouse, gender: "male")
+
+Spouse.where{gender == 'male'}
+Spouse.where{gender == 'female'}
+
+
+./bin/rails g migration add_author_ids_to_legal_document settlor_id:integer executor_id:integer undersigner_id:integer
+./bin/rails g migration add_type_to_legal_document type:string
+./bin/rails g migration add_type_to_person type:string
+./bin/rails g migration add_type_to_settlor_dependent_associations type:string
+./bin/rails g migration add_gender_to_person gender:string
+
+bundle exec rake db:migrate db:migrate:status
+
+
+./bin/rails g cancan:ability
+
+
+
+./bin/rails g scaffold Template name:string location:text
+
+
+./bin/rails g migration add_priority_to_person priority:integer
+
+bundle exec rake db:migrate db:migrate:status
+
+
+./bin/rake db:db:test:prepare
+./bin/rake db:schema:load
+
+
+./bin/rails destroy scaffold SettlorLegalDocumentAssociation
+./bin/rails g scaffold SettlorLegalDocumentAssociation settlor_id:integer legal_document_id:integer
+./bin/rails g migration add_legal_document_id_to_templates legal_document_id:integer
+
+Template.count
+template = Template.where{name == 'Will (husband)'}
+# template = Template.find(Template.where{name == 'Will (husband)'}.first.id)
+
+
+./bin/rails g bootstrapped_index_partial settlors/children/index full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string
+./bin/rails g bootstrapped_index_partial settlors/spouses/index full_name:string address_01:string address_02:string city:string county_name:string state:string zipcode:string

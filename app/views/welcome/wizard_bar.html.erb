@@ -1,0 +1,142 @@
+<style type="text/css">
+  .row.sample-section div{
+    text-align: center; 
+  }
+</style>
+
+    <div id="rootwizard">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <ul>
+              <li><a href="#tab1" data-toggle="tab">First</a></li>
+              <li><a href="#tab2" data-toggle="tab">Second</a></li>
+              <li><a href="#tab3" data-toggle="tab">Third</a></li>
+              <li><a href="#tab4" data-toggle="tab">Forth</a></li>
+              <li><a href="#tab5" data-toggle="tab">Fifth</a></li>
+              <li><a href="#tab6" data-toggle="tab">Sixth</a></li>
+              <li><a href="#tab7" data-toggle="tab">Seventh</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- div id="bar" class="progress progress-striped active" -->
+        <div id="bar" class="progress progress active">
+          <div class="bar"></div>
+        </div>
+
+        <div class="tab-content">
+          <div class="tab-pane" id="tab1">
+          1
+          </div>
+
+          <div class="tab-pane" id="tab2">
+          <p>
+          <input type='text' name='name' id='name' placeholder='Enter Your Name'>
+          </p>
+          </div>
+
+          <div class="tab-pane" id="tab3">
+          3
+          </div>
+
+          <div class="tab-pane" id="tab4">
+            <div class="row sample-section">
+              <div class="span4" style="">
+                <h1>One</h1>
+                <div class="well">1</div>
+              </div>
+              <div class="span4" style="">
+                <h1>Two</h1>
+                <div class="well">2</div>
+              </div>
+              <div class="span4" style="">
+                <h1>Three</h1>
+                <div class="well">3</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="tab5">
+          5
+          </div>
+          <div class="tab-pane" id="tab6">
+          6
+          </div>
+          <div class="tab-pane" id="tab7">
+          7
+          </div>
+          <ul class="pager wizard">
+            <li class="group pull-left" >
+              <ul>
+              <li class="first"><a href="#">First</a></li>
+              <li class="previous"><a href="#">Previous</a></li>
+              </ul>
+            </li>
+
+            <li class="group pull-right" >
+              <ul>
+              <li class="next"><a href="#">Next</a></li>
+              <li class="last"><a href="#">Last</a></li>
+              <li class="finish save" ><a href="#">Save</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>	
+      </div>	
+    </div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#rootwizard').bootstrapWizard({onNext: function(tab, navigation, index) {
+      if(index==2) {
+      // Make sure we entered the name
+      if(!$('#name').val()) {
+      alert('You must enter your name');
+      $('#name').focus();
+      return false;
+      }
+      }
+      // Set the name for the next tab
+      $('#tab3').html('Hello, ' + $('#name').val());
+
+    }, onTabShow: function(tab, navigation, index) {
+      var $total = navigation.find('li').length;
+      var $current = index+1;
+      var $percent = ($current/$total) * 100;
+      $('#rootwizard').find('.bar').css({width:$percent+'%'});
+
+    	// If it's the last tab then hide the last button and show the finish instead
+      if($current >= $total) {
+        $('#rootwizard').find('.pager .next').addClass("disabled");
+        $('#rootwizard').find('.pager .finish').removeClass("disabled");
+        $('#rootwizard').find('.pager .last').addClass("disabled");
+      } else {
+        $('#rootwizard').find('.pager .next').removeClass("disabled");
+        $('#rootwizard').find('.pager .last').removeClass("disabled");
+        $('#rootwizard').find('.pager .finish').addClass("disabled");
+      }
+
+      if($('#rootwizard .pager .previous').hasClass("disabled")){
+        $('#rootwizard .pager .first').addClass("disabled");
+      } else {
+        $('#rootwizard .pager .first').removeClass("disabled");
+      }
+      
+    }});
+
+
+  	$('#rootwizard .finish').click(function() {
+      alert('Finished!, Starting over!');
+      $('#rootwizard').find("a[href*='tab1']").trigger('click');
+    });
+
+    $(".accordion-toggle").click(function(){
+      $(".collapse.in").collapse("hide");
+    });
+
+    });
+</script>
+

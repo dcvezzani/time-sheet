@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Clf004</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+
+  <style type="text/css">
+    /*   height: 300px; /* row.navbar-main.height + row.navbar-main.padding-bottom = >this< */ 
+    /* .header{ */
+    /*   background-color: blue; */
+    /*   color: white;  */
+    /*   position: absolute; */
+    /*   width: 100%; */
+    /*   left: 0; */
+    /*   top: 0; */
+    /*   padding: 0; */
+    /*   margin: 0; */
+    /*   z-index: -10; */
+
+    /* } */
+
+    .header {
+      background-color: blue; 
+      color: #FFFFFF;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .header.narrow {
+      text-align: center;
+      margin-left: -20px;
+      margin-right: -20px;
+      margin-top: -20px;
+      padding: 20px 20px;
+    }
+
+
+    /* space at top of main body */
+    .container.controller-messages{
+      margin-top: 2em;
+    }
+
+    /* space at bottom of main body */
+    .row.main-content{
+      margin-bottom: 2em;
+    }
+
+    .header .header-content{
+      margin-top: 4em;
+      margin-left: 4em;
+    }
+    .header .header-content p.lead{
+      font-size: 20pt;
+    }
+    .header .header-content h1{
+      font-size: 50pt;
+      line-height: 70px;
+    }
+
+    .header .header-content.narrow{
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+    }
+    .header .header-content.narrow h1{
+      font-size: 40pt;
+      text-align: center; 
+    }
+    .header .header-content.narrow p.lead{
+      font-size: 16pt;
+      text-align: center; 
+    }
+
+    #page-navigation ul li.active a{
+      background-color: blue; 
+      color: white; 
+      border: blue; 
+    }
+    #page-navigation ul li.active i{
+      background-image: url("/assets/img/glyphicons-halflings-white.png");
+    }
+
+    ul.pager.wizard li.groupdwleft{
+      float: left; 
+    }
+    ul.pager.wizard li.pull-right{
+      float: right; 
+    }
+  </style>
+
+  <!-- http://www.seabreezecomputers.com/tips/mobile-css.htm -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" /> 
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <div class="navbar-inner">
+      <div class="container">
+       
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </a>
+       
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <%= link_to "Project name", root_path, class: "brand" %>
+       
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+        <ul class="nav">
+        <li><%= link_to "Home", root_path(anchor: "top-nav-home") %></li>
+        <li><%= link_to "Wizard", wizard_welcome_path(anchor: "top-nav-wizard") %></li>
+        <li><%= link_to "Wizard Bar", wizard_bar_welcome_path(anchor: "top-nav-wizard-bar") %></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+
+        <% if(current_user) %>
+          <li><%= link_to "Log out", destroy_user_session_path, method: :delete %></li>
+        <% else %>
+          <li><%= link_to "Log in", new_user_session_path %></li>
+        <% end -%>
+
+        </ul>
+      </div>
+       
+      </div>
+      </div>
+    </div>
+
+  <div class="header">
+    <div class=" header-content">
+      <h1>Project Name</h1>
+      <p class="lead">Aenean commodo ligula eget dolor aenean massa</p>
+    </div>
+  </div>
+
+  <div class="container controller-messages">
+    <div class="row">
+      <div class="span12 ">
+          <p class="alert alert-success" style="<%= notice.nil? ? "display: none; " : ""%>"><%= notice %></p>
+          <p class="alert alert-error" style="<%= alert.nil? ? "display: none; " : ""%>"><%= alert %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+  <div class="row main-content">
+    <div class="span12 ">
+      <%= yield %>
+    </div>
+  </div>
+  </div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // same as row.navbar-main.padding-bottom
+    $('.page-navigation').affix({offset: 260});
+
+    // update side-bar navigation to reflect current section of page
+    $('body').scrollspy({target: '#page-navigation'});
+    $('[data-spy="scroll"]').each(function () {
+      var $spy = $(this).scrollspy('refresh')
+    });
+  });
+
+  $(document).ready(function(){
+    var va = new ViewAdjustment();
+    va.add(".page-navigation", adjust_page_navigation);
+    va.add(".header .header-content, ul.pager.wizard li", function(prop, win){
+      if($(win).width() < 750){
+        $(prop).addClass("narrow");
+      } else {
+        $(prop).removeClass("narrow");
+      }
+    });
+    va.add(".navbar-main .navbar", function(prop, win){
+      if($(win).width() < 750){
+        $(prop).css("position", "static");
+      } else {
+        $(prop).css("position", "fixed");
+      }
+    });
+    va.add(".header .header-content, ul.pager.wizard li, .header", function(prop, win){
+      if($(win).width() < 980){
+        $(prop).addClass("narrow");
+      } else {
+        $(prop).removeClass("narrow");
+      }
+    });
+
+    
+
+    $(window).resize(function(){va.adjustments(this)});
+    $(window).scroll(function(){va.adjustments(this)});
+    va.adjustments(window);
+
+    // indicate which top navigation menu item is being displayed
+    var top_nav_hash = location.hash.slice(1);
+    $("[href $= '" + top_nav_hash + "']").closest("li").addClass("active");
+  });
+
+</script>
