@@ -1,4 +1,5 @@
 BUNDLE_GEMFILE=/Users/davidvezzani/rails-app/clean-start/Gemfile bundle exec rails new clf-004 -T
+git clone -b master clean-start clf-004
 
 cp /Users/davidvezzani/rails-app/clean-start/Gemfile /Users/davidvezzani/rails-app/clf-004
 rm Gemfile.lock
