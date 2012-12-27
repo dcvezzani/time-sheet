@@ -7,11 +7,11 @@ echo -e "#GMAIL_USERNAME=asdf GMAIL_PASSWORD=asdf RAILS_ENV=development bundle e
 chmod 755 start.sh
 
 # Procfile (to go with 'thin' server)
-echo -e "web: bundle exec rails server thin -p $PORT -e $RACK_ENV\n#worker:  bundle exec rake jobs:work" > Procfile
+echo -e "web: bundle exec rails server thin -p \$PORT -e \$RACK_ENV\n#worker:  bundle exec rake jobs:work" > Procfile
 chmod 644 Procfile
 
 # Watchr files
-echo -e "def run_spec(file)\n   unless File.exist?(file)\n     puts "#{file} does not exist"\n     return\n   end\n \n   puts "Running #{file}"\n   system "bundle exec rspec #{file}"\n   puts\n end\n \n watch("spec/.*/*_spec.rb") do |match|\n   run_spec match[0]\n end\n \n watch("app/(.*/.*).rb") do |match|\n   run_spec  {spec/#{match[1]}_spec.rb}\n end\n" > .watchr
+echo -e "def run_spec(file)\n  unless File.exist?(file)\n    puts \"#{file} does not exist\"\n    return\n  end\n\n  puts \"Running #{file}\"\n  system \"bundle exec rspec #{file}\"\n  puts\nend\n\nwatch(\"spec/.*/*_spec.rb\") do |match|\n  run_spec match[0]\nend\n\nwatch(\"app/(.*/.*).rb\") do |match|\n  run_spec  %{spec/#{match[1]}_spec.rb}\nend\n" > .watchr
 
 echo -e "desc \"Run watchr\"\ntask :watchr do\n  sh %{bundle exec watchr .watchr}\nend\n" > lib/tasks/watchr.rake
 
