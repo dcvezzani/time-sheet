@@ -1,6 +1,6 @@
-BUNDLE_GEMFILE=/Users/davidvezzani/rails-app/clf-002/Gemfile bundle exec rails new clf-004 -T
+BUNDLE_GEMFILE=/Users/davidvezzani/rails-app/clean-start/Gemfile bundle exec rails new clf-004 -T
 
-cp /Users/davidvezzani/rails-app/clf-002/Gemfile /Users/davidvezzani/rails-app/clf-004
+cp /Users/davidvezzani/rails-app/clean-start/Gemfile /Users/davidvezzani/rails-app/clf-004
 rm Gemfile.lock
 bundle
 
