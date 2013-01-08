@@ -50,6 +50,11 @@ gem 'thin'
 #gem 'numbers_and_words', git: "git://github.com/kslazarev/numbers_and_words.git"
 gem 'numbers_and_words'
 
+# pdf generation
+gem "prawnto_2", :require => "prawnto"
+gem 'prawn'
+#gem 'prawn', :git => "git://github.com/sandal/prawn.git", :tag => '0.10.2', :submodules => true
+
 # generate open office documents
 #gem 'serenity-odt'
 

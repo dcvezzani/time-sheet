@@ -24,6 +24,8 @@ module Clf004
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W(#{config.root}/spec/support) if Rails.env.development?
+    config.autoload_paths += %W(#{config.root}/app/reports)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -67,13 +69,14 @@ module Clf004
     config.assets.version = '1.0'
 
     # Additional paths where assets may be looked for
-    config.assets.paths %W(#{config.root}/bootstrap #{config.root}/bootstrap_wizard)
+    config.assets.paths %W(#{config.root}/bootstrap #{config.root}/bootstrap_wizard #{config.root}/jquery.ui.theme.lightness/css/ui-lightness)
 
     initializer :after_append_asset_paths, 
                 :group => :all, 
                 :after => :append_assets_path do
        config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "bootstrap", "css").to_s
        config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "bootstrap_wizard").to_s
+       config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "jquery.ui.theme.lightness", "css", "ui-lightness").to_s
     end
 
     config.generators do |g|
