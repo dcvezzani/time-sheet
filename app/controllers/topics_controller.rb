@@ -10,6 +10,15 @@ class TopicsController < ApplicationController
     end
   end
 
+  def index_original
+    @topics = Topic.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @topics }
+    end
+  end
+
   # GET /topics/1
   # GET /topics/1.json
   def show

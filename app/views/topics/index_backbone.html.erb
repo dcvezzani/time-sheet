@@ -1,0 +1,35 @@
+<style type="text/css">
+  table th.name{
+    width: 300px;
+  }
+  table td.name{
+    vertical-align: top;
+  }
+</style>
+
+<div id="topics"></div>
+
+<script type="text/javascript">
+  $(function() {
+    // TimeSheet is the app name
+    window.router = new TimeSheet.Routers.TopicsRouter({topics: <%= @topics.to_json.html_safe -%>});
+    Backbone.history.start();
+
+    $(document).keyup(function(e){
+      if($("#topics-table").length > 0){
+        switch(e.keyCode){
+          // case 69:
+          //   console.log("load edit form")
+          //   window.router.newTopic()
+          //   break;
+          case 78:
+            //console.log("load new form")
+            window.router.newTopic()
+            break;
+          default:
+        }
+        //console.log(e.type, e.keyCode)
+      }
+    })
+  });
+</script>
