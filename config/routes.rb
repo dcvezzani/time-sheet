@@ -1,4 +1,4 @@
-Clf004::Application.routes.draw do
+Timesheet::Application.routes.draw do
 
   resources :topics
   resources :time_sheet_entries
