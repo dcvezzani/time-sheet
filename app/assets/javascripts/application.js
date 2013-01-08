@@ -12,6 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require underscore
+//= require backbone
+//= require backbone_rails_sync
+//= require backbone_datalink
+//= require backbone/time_sheet
 //= require_tree .
 //
 // THIS MUST GO LAST

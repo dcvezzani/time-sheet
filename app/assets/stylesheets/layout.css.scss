@@ -1,0 +1,77 @@
+    .affix{
+      top: 70px;
+    }
+    .affix.narrow{
+      position: static;
+    }
+
+    .header {
+      background-color: blue; 
+      color: #FFFFFF;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .header.narrow {
+      text-align: center;
+      margin-left: -20px;
+      margin-right: -20px;
+      margin-top: -20px;
+      padding: 20px 20px;
+    }
+
+
+    /* space at top of main body */
+    .container.controller-messages{
+      margin-top: 2em;
+    }
+
+    /* space at bottom of main body */
+    .row.main-content{
+      margin-bottom: 2em;
+    }
+
+    .header .header-content{
+      margin-top: 4em;
+      margin-left: 4em;
+    }
+    .header .header-content p.lead{
+      font-size: 20pt;
+    }
+    .header .header-content h1{
+      font-size: 50pt;
+      line-height: 70px;
+    }
+
+    .header .header-content.narrow{
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+    }
+    .header .header-content.narrow h1{
+      font-size: 40pt;
+      text-align: center; 
+    }
+    .header .header-content.narrow p.lead{
+      font-size: 16pt;
+      text-align: center; 
+    }
+
+    #page-navigation ul li.active a{
+      background-color: blue; 
+      color: white; 
+      border: blue; 
+    }
+    #page-navigation ul li.active i{
+      background-image: url("/assets/img/glyphicons-halflings-white.png");
+    }
+
+    ul.pager.wizard li.groupdwleft{
+      float: left; 
+    }
+    ul.pager.wizard li.pull-right{
+      float: right; 
+    }
+

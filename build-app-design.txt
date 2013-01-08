@@ -24,6 +24,14 @@ bundle exec rake db:migrate db:migrate:status
 
 
 
+bundle exec rails g scaffold TimeSheetEntry starts_at:datetime ends_at:datetime starts_at:datetime user_id:integer summary:text content:text
+bundle exec rails g scaffold Topic name:string description:text
+bundle exec rails g model TimeSheetEntryTopicAssoc time_sheet_entry_id:integer topic_id:integer
+
+bundle exec rake db:migrate db:migrate:status
+bundle exec rake routes > routes.txt
+
+
 
 
 
