@@ -1,0 +1,31 @@
+                  topics GET    /topics(.:format)                      topics#index
+                         POST   /topics(.:format)                      topics#create
+               new_topic GET    /topics/new(.:format)                  topics#new
+              edit_topic GET    /topics/:id/edit(.:format)             topics#edit
+                   topic GET    /topics/:id(.:format)                  topics#show
+                         PUT    /topics/:id(.:format)                  topics#update
+                         DELETE /topics/:id(.:format)                  topics#destroy
+      time_sheet_entries GET    /time_sheet_entries(.:format)          time_sheet_entries#index
+                         POST   /time_sheet_entries(.:format)          time_sheet_entries#create
+    new_time_sheet_entry GET    /time_sheet_entries/new(.:format)      time_sheet_entries#new
+   edit_time_sheet_entry GET    /time_sheet_entries/:id/edit(.:format) time_sheet_entries#edit
+        time_sheet_entry GET    /time_sheet_entries/:id(.:format)      time_sheet_entries#show
+                         PUT    /time_sheet_entries/:id(.:format)      time_sheet_entries#update
+                         DELETE /time_sheet_entries/:id(.:format)      time_sheet_entries#destroy
+           welcome_index GET    /welcome/index(.:format)               welcome#index
+          wizard_welcome GET    /welcome/wizard(.:format)              welcome#wizard
+      wizard_bar_welcome GET    /welcome/wizard_bar(.:format)          welcome#wizard_bar
+        new_user_session GET    /users/sign_in(.:format)               devise/sessions#new
+            user_session POST   /users/sign_in(.:format)               devise/sessions#create
+    destroy_user_session DELETE /users/sign_out(.:format)              devise/sessions#destroy
+           user_password POST   /users/password(.:format)              devise/passwords#create
+       new_user_password GET    /users/password/new(.:format)          devise/passwords#new
+      edit_user_password GET    /users/password/edit(.:format)         devise/passwords#edit
+                         PUT    /users/password(.:format)              devise/passwords#update
+cancel_user_registration GET    /users/cancel(.:format)                devise/registrations#cancel
+       user_registration POST   /users(.:format)                       devise/registrations#create
+   new_user_registration GET    /users/sign_up(.:format)               devise/registrations#new
+  edit_user_registration GET    /users/edit(.:format)                  devise/registrations#edit
+                         PUT    /users(.:format)                       devise/registrations#update
+                         DELETE /users(.:format)                       devise/registrations#destroy
+                    root        /                                      welcome#index

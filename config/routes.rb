@@ -1,4 +1,4 @@
-Timesheet::Application.routes.draw do
+TimeSheet::Application.routes.draw do
 
   resources :topics
   resources :time_sheet_entries
