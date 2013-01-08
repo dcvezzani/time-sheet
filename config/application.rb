@@ -70,10 +70,12 @@ module Clf004
 
     # Additional paths where assets may be looked for
     config.assets.paths %W(#{config.root}/bootstrap #{config.root}/bootstrap_wizard #{config.root}/jquery.ui.theme.lightness/css/ui-lightness)
+    # #{config.root}/backbone
 
     initializer :after_append_asset_paths, 
                 :group => :all, 
                 :after => :append_assets_path do
+       #config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "backbone").to_s
        config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "bootstrap", "css").to_s
        config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "bootstrap_wizard").to_s
        config.assets.paths.unshift Rails.root.join(config.root, "app", "assets", "jquery.ui.theme.lightness", "css", "ui-lightness").to_s
@@ -85,5 +87,7 @@ module Clf004
 
     # (Devise installation instructions) If you are deploying Rails 3.1 on Heroku, you may want to set:
     config.assets.initialize_on_precompile = false
+
+    #config.assets.precompile += ['application-backbone.js']
   end
 end

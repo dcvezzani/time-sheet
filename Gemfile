@@ -23,6 +23,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem "rails-backbone" #, git: "git://github.com/dcvezzani/backbone-rails.git"
 
 # To use ACL
 gem "devise", ">= 2.1.0"
@@ -54,6 +55,7 @@ gem 'numbers_and_words'
 gem "prawnto_2", :require => "prawnto"
 gem 'prawn'
 #gem 'prawn', :git => "git://github.com/sandal/prawn.git", :tag => '0.10.2', :submodules => true
+gem 'pdf-reader'
 
 # generate open office documents
 #gem 'serenity-odt'
