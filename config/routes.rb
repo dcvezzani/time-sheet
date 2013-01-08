@@ -1,4 +1,8 @@
 Clf004::Application.routes.draw do
+
+  resources :topics
+  resources :time_sheet_entries
+
   get "welcome/index"
   get "welcome/wizard", as: :wizard_welcome
   get "welcome/wizard_bar", as: :wizard_bar_welcome
