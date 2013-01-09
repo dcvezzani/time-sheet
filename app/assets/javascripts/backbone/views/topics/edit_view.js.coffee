@@ -24,43 +24,14 @@ class TimeSheet.Views.Topics.EditView extends Backbone.View
     @postViaHtml(form, 
       success: (topic) =>
         window.router.refreshCollectionAndRenderFor("topics", '/index')
-        #this.refreshCollectionAndRenderFor(window.router, "topics", '/index')
 
-      error: (topic, jqXHR) =>
-        self.renderHtml(form, jqXHR.responseText)
+      error: (jqXHR, status) =>
+        @render(jqXHR.responseText)
     )
 
-  updateOrig: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
+  ###
+  afterRender: ->
+    $("#topic_name").focus().select()
+  ###
 
-    @model.save(null,
-      success: (topic) =>
-        @model = topic
-        #window.location.hash = "/#{@model.id}"
-        window.location.hash = "/index"
-    )
-
-  renderOrig: ->
-    @$el.html(@template(@model.toJSON() ))
-
-    this.$("form").backboneLink(@model)
-
-    setTimeout(->
-      $("input[name='name']").focus()
-    50)
-
-    return this
-
-  render: ->
-    self = this
-    @template(@model.toJSON(), (data) -> 
-      self.$el.html(data)
-      self.$("form").backboneLink(self.model)
-
-      setTimeout(->
-        $("input[name='name']").focus()
-      50)
-    )
-
-    return self
+  render: Backbone.View.renderContent

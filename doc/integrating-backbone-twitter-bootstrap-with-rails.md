@@ -1,6 +1,9 @@
-### Section
+### Create or select a Rails application
 
 Create project and update local configuration.  Also, update 'application' name for configuration files (a manual process).
+
+I use ```clean-start``` as a base for many of my projects.  There are some tasks that I run manually; I open them in vim and
+then copy/paste them in terminal to generate local files and set up my database.
 
 ```
 git clone -b master clean-start time-sheet
@@ -11,6 +14,9 @@ vim -p ./build-local-database.txt ./build-local-start-scripts.txt
 
 Update bundle and run migrations.
 
+Update your Gemfile, create the binstubs (<rails-root>/bin) if they don't already exist 
+and make sure you're caught up with your migrations.
+
 ```
 bundle update
 bundle install --binstubs
@@ -20,9 +26,13 @@ bundle install --binstubs
 
 Test out basics.
 
+The 'basics' includes RSpec (including steak), Watchr listener with Spork to speed up tests, 
+starting the application and opening the home page in your system's web browser.
+
 ```
 ./bin/rspec
 
+./spork
 ./watchr.sh
 
 ./start.sh
@@ -30,7 +40,13 @@ Test out basics.
 ```
 
 
-### Section
+### Scaffold out the resource
+
+For both Rails and Backbone.
+
+It's not necessary, but since this is a study, I create 2 additional sets of resources to clarify 
+the difference between using the original Rails-generated scaffolding and the Backbone-integrated
+resource.
 
 ```
 ./bin/rails g scaffold Topic name:string description:text
@@ -48,7 +64,10 @@ resources :topics_bb, controller: :topics_bb
 ```
 
 
-### Section
+### Create controller for Backbone-integrated resource
+
+Assuming that you create the resource named 'topic', this controller should inherit from 
+the Rails-generated one.
 
 The ```html``` format is for rendering the initial ```index``` page.  The ```json``` format is used by Backbone to retrieve collections of models.
 
@@ -120,9 +139,9 @@ Set the default index page to use Backbone flavored view.
 cp app/view/topics/index_backbone.html.rb app/view/topics/index.html.rb
 ```
 
-### Section
+### Update Backbone model
 
-Update Backbone model.  Include configuration to exclude Rails model attributes that are not attr_accessible.  
+Include configuration to exclude Rails model attributes that are not attr_accessible.  
 Point base url to desired controller.
 
 E.g., app/assets/javascripts/backbone/models/topic.js.coffee
@@ -150,9 +169,9 @@ E.g., app/assets/javascripts/backbone/models/topic.js.coffee
   url: '/topics_bb'
 ```
 
-### Section
+### Update item view
 
-Update item view.  Distinguish 'data' td cells and add confirmation for delete.
+Distinguish 'data' td cells and add confirmation for delete.
 
 E.g., app/assets/javascripts/backbone/views/topics/topic_view.js.coffee
 
@@ -168,7 +187,7 @@ E.g., app/assets/javascripts/backbone/views/topics/topic_view.js.coffee
 ```
 
 
-### Section
+### Update index template
 
 Update index template to use Twitter Bootstrap design elements.  Reduce the number of empty 'action' th tags to one.
 
@@ -213,7 +232,7 @@ E.g., app/assets/javascripts/backbone/templates/topics/topic.js.ejs
 </td>
 ```
 
-### Section
+### Update new view
 
 Update to return back to the index view (instead of the show view).  Put the focus on the first field in the form.
 
@@ -249,7 +268,65 @@ E.g., app/assets/javascripts/backbone/views/topics/edit_view.js.coffee
     50)
 ```
 
-### Section
+### Use the Rails ERB view files
+
+#### Keeping things clean and DRY
+
+##### A few Backbone extensions
+
+We will create a simple JS library where we can keep some common functionality handy, especially for our 'new' and 'edit' Backbone views.
+It includes the following methods:
+
+1. **Backbone.View#postViaHtml**: Post data create/update through html requests to the Rails controller. 
+This is used instead of making JSON requests which would be typical for a Backbone view.  
+The input, so as to speak, is 'html' and 'html' is returned.
+
+2. **Backbone.Router#refreshCollectionAndRenderFor**: Pull an updated list of JSON objects from the server.  Then render using the specified Backbone route.
+A JSON request is made to get a refreshed collection of models.  The Backbone router is used to navigate to route (e.g., '/index').
+
+3. **Backbone.View.renderContent**: Common module for rendering html returned from the controller from an 'html' request.
+This 'instance method' is used as the given view's ```#render()``` method.  It should be used only for views that rely on
+Rails ERB files instead of Backbone templates (e.g., 'new_view', 'edit_view').
+
+4. **Backbone.View#afterRender**: Post-processing that may take place after #render() is called.
+E.g., focus on a field element and select the text.
+
+These methods are packaged in a little Backbone extension library included in this sample app.
+
+
+##### Rails ERB view helpers
+
+Well, there's actually only one pertinent to this current example.  Provide an easy way to identify
+Rails scaffold-generated forms.
+
+Using a generic reference:
+
+```
+.new-form, .edit-form
+```
+
+Using a more specific reference (assuming your resource name is 'topic'):
+```
+.new-topic, .edit-topic
+```
+
+E.g., app/helpers/application_helper.rb
+
+```
+module ApplicationHelper
+  ...
+  def form_type(obj)
+    if(obj.new_record?)
+      "new-form new-#{obj.class.name.downcase}"
+    else
+      "edit-form edit-#{obj.class.name.downcase}"
+    end
+  end
+  ...
+end
+```
+
+#### Integrate the 'new' action
 
 To use the Rails ERB view files, we configure the ```template``` method to go fetch html through the controller instead of using Backbone's templates.
 This enables us to use the Rails view helpers including rendering errors.  This means we need to make some calls manually that would otherwise
@@ -262,7 +339,6 @@ E.g., app/assets/javascripts/backbone/views/topics/new_view.js.coffee
 
 ```
 class TimeSheet.Views.Topics.NewView extends Backbone.View
-  #template: JST["backbone/templates/topics/new"]
   template: (model, callback) -> _.template(
     href = $("#new-topic-from-erb").attr("href")
     console.log("new href: " + href)
@@ -273,7 +349,7 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
   )
   ...
   events:
-    "submit #new_topic": "save"
+    "submit .new-topic": "save"
   ...
   save: (e) ->
     e.preventDefault()
@@ -286,18 +362,17 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
       success: (topic) =>
         window.router.refreshCollectionAndRenderFor("topics", '/index')
 
-      error: (topic, jqXHR) =>
-        self.renderHtml(form, jqXHR.responseText)
+      error: (jqXHR, status) =>
+        @renderHtml(jqXHR.responseText)
     )
   ...
   render: ->
     self = this
-    @template(@model.toJSON(), (data) -> 
-      self.$el.html(data)
-      self.$("form").backboneLink(self.model)
+    @template(@model.toJSON(), (html) -> 
+      self.$el.html(html)
 
       setTimeout(->
-        $("input[name='name']").focus()
+        self.afterRender()
       50)
     )
 
@@ -356,63 +431,66 @@ E.g., app/views/topics/_form.html.erb
 
 ```
 
-### Section
+##### Create actions for Backbone-integrated resource
 
-The controller should be adjusted so that when the ```create``` action is called and ```params[:remote]``` is included, no redirect will be sent.
+The controller should be adjusted so that when the ```create``` action is called, no redirect will be sent.
 Otherwise, the client is making an additional call for the redirect that will never be used.
 
-E.g., app/controllers/topics_controller.rb, #create
+E.g., app/controllers/topics_bb_controller.rb
 
 ```
+  # GET /topics/new
+  # GET /topics/new.json
+  def new
+    @topic = Topic.new
+
+    respond_to do |format|
+      format.html { render layout: false } # new.html.erb
+      format.json { render json: @topic }
+    end
+  end
+  
+  # GET /topics/1/edit
+  def edit
+    @topic = Topic.find(params[:id])
+    render layout: false
+  end
+
+  # POST /topics
+  # POST /topics.json
+  def create
+    @topic = Topic.new(params[:topic])
+
     respond_to do |format|
       if @topic.save
-        #format.html { redirect_to @topic, notice: 'Topic was successfully created.' }
-        format.html { 
-          if(params[:remote] == "true")
-            render text: "ok" 
-          else
-            redirect_to @topic, notice: 'Topic was successfully created.'
-          end
-        }
+        format.html { render text: "ok" }
         format.json { render json: @topic, status: :created, location: @topic }
       else
-        format.html { render action: "new", layout: (params[:remote] != "true") }
+        format.html { render action: "new", layout: false }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
-```
+  end
 
-E.g., app/controllers/topics_controller.rb, #create
+  # PUT /topics/1
+  # PUT /topics/1.json
+  def update
+    @topic = Topic.find(params[:id])
 
-```
     respond_to do |format|
-      if @topic.save
-        #format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
-        format.html { 
-          if(params[:remote] == "true")
-            render text: "ok" 
-          else
-            redirect_to @topic, notice: 'Topic was successfully updated.'
-          end
-        }
-        format.json { render json: @topic, status: :created, location: @topic }
+      if @topic.update_attributes(params[:topic])
+        format.html { render text: "ok" }
+        format.json { head :no_content }
       else
-        format.html { render action: "edit", layout: (params[:remote] != "true") }
+        format.html { render action: "edit", layout: false }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
-```
-
-And in order for the ```params[:remote]``` configuration to actually be used, we update the ```_form.html.erb``` to use it.
-
-E.g., app/views/topics/_form.html.erb
+  end
 
 ```
-<%= form_for(@topic, url: topics_path(@topic, remote: "true"), html: {class: "form form-horizontal #{form_type(@topic)}"}) do |f| %>
-...
-```
 
-### Section
+#### Integrate the 'edit' action
 
 Go through a similar process for edit.  There will be slight differences as noted below.
 
@@ -446,7 +524,8 @@ E.g., app/assets/javascripts/backbone/views/topics/edit_view.js.coffee
     )
 ```
 
-Again, ```edit.html.erb``` will be similarly structured to ```new.html.erb```, but with an additional change.
+Again, ```edit.html.erb``` will be similarly structured to ```new.html.erb```, but with 
+an additional change to conform with the Backbone router syntax for the 'show' action.
 
 E.g., app/views/topics/new.html.erb
 
@@ -454,18 +533,20 @@ E.g., app/views/topics/new.html.erb
   <%= link_to 'Show', "#/#{@topic.id}" %>
 ```
 
-### Section
+##### Clean up 'template' links
 
 Hide the 'template' links.
 
+E.g., app/views/topics/index_backbone.html.erb
+
 ```
-<%= link_to "New Topic (from ERB) Template", new_topic_path(remote: "true"), id: "new-topic-from-erb", style: "display: none;" %>
-<%= link_to "Edit Topic (from ERB) Template", edit_topic_path("__xxx__", remote: "true"), id: "edit-topic-from-erb", style: "display: none;" %>
+<%= link_to "New Topic (from ERB) Template", new_topic_path, id: "new-topic-from-erb", style: "display: none;" %>
+<%= link_to "Edit Topic (from ERB) Template", edit_topic_path("__xxx__"), id: "edit-topic-from-erb", style: "display: none;" %>
 ```
 
-### Section
+#### Update the 'show' template
 
-Apply Twitter Bootstrap design elements to the ```show``` template.
+Apply Twitter Bootstrap design elements to the ```show``` template.  There is no need in this instance to be using the Rails generated view.
 
 E.g., app/assets/javascripts/backbone/templates/topics/show.jst.ejs
 
@@ -492,9 +573,21 @@ E.g., app/assets/javascripts/backbone/templates/topics/show.jst.ejs
 </div>
 ```
 
-### Section
+#### Update item view (for the 'delete' action)
 
-Add additional key shortcuts for convenience.
+If you wish to prompt the end user for confirmation before deleting, add the ```confirm()``` check.  
+There is no need in this instance to be using the Rails generated view.
+
+E.g., app/assets/javascripts/backbone/views/topics/topic_view.js.coffee
+
+```
+  destroy: () ->
+    if(confirm("Are you sure?"))
+      @model.destroy()
+      this.remove()
+```
+
+### Add additional key shortcuts for convenience
 
 E.g., app/views/topics/index_backbone.html.erb
 
@@ -530,7 +623,53 @@ E.g., app/views/topics/index_backbone.html.erb
 </script>
 ```
 
-### Section
+### But wait,... I'm not seeing the errors!
+
+Rails returns a successful response (in terms of HTTP return codes) always, even when validation fails. 
+In order for an ajax call to register error logic handling, we need an error code.
+
+E.g., app/controllers/topics_bb_controller.rb, #create
+
+```
+    respond_to do |format|
+      if @topic.save
+        ...
+      else
+        format.html { render action: "new", layout: false, status: :unprocessable_entity }
+        ...
+      end
+    end
+```
+
+E.g., app/controllers/topics_bb_controller.rb, #update
+
+```
+    respond_to do |format|
+      if false and @topic.update_attributes(params[:topic])
+        ...
+      else
+        format.html { render action: "edit", layout: false, status: :unprocessable_entity }
+        ...
+      end
+    end
+```
+
+### Conclusion
+
+Backbone is a fabulous resource for organizing JavaScript intensive web applications.  It can do a lot.  
+Sometimes, we don't need a lot, but want to benefit from the framework that Backbone has to offer.  In this example, 
+we wanted to leverage some of the Rails-generated views, helpers and validation.  We accomplish this by adhering to
+the following high-level concepts:
+
+1. To leverage Rails ERB generated 'new' and 'edit' views, including the display of errors, partials (especially _form.html.erb), 
+and helpers, we make 'html' requests of the controller and expect 'html' responses that we simply render the html we received rather 
+than generate the HTML using the associated collection of JSON objects and Backbone templates.
+
+2. In most cases, we can simply continue using Backbone's templates for the other actions, so those Backbone views will largely
+be left unaltered.
 
 
-### Section
+I'm not completely sure what repurcussions there are to this approach, but so far, it's working fine.  Sure, this approach could be seen as
+defeating some of the goals and aims of Backbone, but I feel that sometimes you try to use the best of both worlds to
+achieve an end goal.
+

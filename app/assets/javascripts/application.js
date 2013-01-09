@@ -16,6 +16,8 @@
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
+//= require backbone-extensions
+//= require backbone-extensions-002
 //= require backbone/time_sheet
 //= require_tree .
 //

@@ -36,8 +36,7 @@ class TopicsController < ApplicationController
     @topic = Topic.new
 
     respond_to do |format|
-      #format.html { render layout: false } # new.html.erb
-      format.html { render layout: (params[:remote] != "true") } # new.html.erb
+      format.html # new.html.erb
       format.json { render json: @topic }
     end
   end
@@ -45,7 +44,6 @@ class TopicsController < ApplicationController
   # GET /topics/1/edit
   def edit
     @topic = Topic.find(params[:id])
-    render layout: (params[:remote] != "true")
   end
 
   # POST /topics
@@ -55,17 +53,10 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       if @topic.save
-        #format.html { redirect_to @topic, notice: 'Topic was successfully created.' }
-        format.html { 
-          if(params[:remote] == "true")
-            render text: "ok" 
-          else
-            redirect_to @topic, notice: 'Topic was successfully created.'
-          end
-        }
+        format.html { redirect_to @topic, notice: 'Topic was successfully created.' }
         format.json { render json: @topic, status: :created, location: @topic }
       else
-        format.html { render action: "new", layout: (params[:remote] != "true") }
+        format.html { render action: "new" }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end
@@ -78,16 +69,10 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       if @topic.update_attributes(params[:topic])
-        format.html { 
-          if(params[:remote] == "true")
-            render text: "ok" 
-          else
-            redirect_to @topic, notice: 'Topic was successfully updated.'
-          end
-        }
+        format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit", layout: (params[:remote] != "true") }
+        format.html { render action: "edit" }
         format.json { render json: @topic.errors, status: :unprocessable_entity }
       end
     end

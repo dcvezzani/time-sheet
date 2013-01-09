@@ -1,9 +1,7 @@
 TimeSheet.Views.Topics ||= {}
 
 class TimeSheet.Views.Topics.NewView extends Backbone.View
-  #template: JST["backbone/templates/topics/new"]
   template: (model, callback) -> _.template(
-    #href = $("#edit-topic-from-erb").attr("href").replace(/__xxx__/, model.id)
     href = $("#new-topic-from-erb").attr("href")
     console.log("new href: " + href)
     
@@ -13,7 +11,7 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
   )
 
   events:
-    "submit #new_topic": "save"
+    "submit .new-topic": "save"
 
   constructor: (options) ->
     super(options)
@@ -33,48 +31,15 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
     @postViaHtml(form, 
       success: (topic) =>
         window.router.refreshCollectionAndRenderFor("topics", '/index')
-        #this.refreshCollectionAndRenderFor(window.router, "topics", '/index')
 
-      error: (topic, jqXHR) =>
-        self.renderHtml(form, jqXHR.responseText)
+      error: (jqXHR, status) =>
+        @render(jqXHR.responseText)
     )
 
-  saveOrig: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
+  ###
+  afterRender: ->
+    $("#topic_name").focus().select()
+  ###
 
-    @model.unset("errors")
+  render: Backbone.View.renderContent
 
-    @collection.create(@model.toJSON(),
-      success: (topic) =>
-        @model = topic
-        #window.location.hash = "/#{@model.id}"
-        window.location.hash = "/index"
-
-      error: (topic, jqXHR) =>
-        @model.set({errors: $.parseJSON(jqXHR.responseText)})
-    )
-
-  renderOrig: ->
-    @$el.html(@template(@model.toJSON() ))
-
-    this.$("form").backboneLink(@model)
-
-    setTimeout(->
-      $("input[name='name']").focus()
-    50)
-
-    return this
-
-  render: ->
-    self = this
-    @template(@model.toJSON(), (data) -> 
-      self.$el.html(data)
-      self.$("form").backboneLink(self.model)
-
-      setTimeout(->
-        $("input[name='name']").focus()
-      50)
-    )
-
-    return self
