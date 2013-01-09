@@ -2,7 +2,8 @@ TimeSheet.Views.TimeSheetEntries ||= {}
 
 class TimeSheet.Views.TimeSheetEntries.NewView extends Backbone.View
   template: (model, callback) -> _.template(
-    href = $("#new-time-sheet-entry-from-erb").attr("href")
+    #href = $("#new-time-sheet-entry-from-erb").attr("href")
+    href = @template_url
     console.log("new href: " + href)
 
     $.get(href, (data) ->
@@ -16,6 +17,7 @@ class TimeSheet.Views.TimeSheetEntries.NewView extends Backbone.View
   constructor: (options) ->
     super(options)
     @model = new @collection.model()
+    @template_url = options.template_url
 
     @model.bind("change:errors", () =>
       @render()

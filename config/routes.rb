@@ -1,6 +1,8 @@
 TimeSheet::Application.routes.draw do
 
   resources :topics,             controller: :topics_bb
+
+  match "time_sheet_entries/with_topics" => "time_sheet_entries_bb#time_sheet_and_topic_entries", as: :time_sheet_and_topic_entries
   resources :time_sheet_entries, controller: :time_sheet_entries_bb
 
   get "welcome/index"

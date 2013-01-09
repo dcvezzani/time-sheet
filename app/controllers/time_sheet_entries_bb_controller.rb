@@ -1,4 +1,11 @@
 class TimeSheetEntriesBbController < TimeSheetEntriesController
+  def time_sheet_and_topic_entries
+    @time_sheet_entries = TimeSheetEntry.all
+    @topics = Topic.all
+
+    render 'index_with_topics'
+  end
+
   # GET /topics/new
   # GET /topics/new.json
   def new

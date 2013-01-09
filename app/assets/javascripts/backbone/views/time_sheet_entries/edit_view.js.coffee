@@ -2,7 +2,8 @@ TimeSheet.Views.TimeSheetEntries ||= {}
 
 class TimeSheet.Views.TimeSheetEntries.EditView extends Backbone.View
   template: (model, callback) -> _.template(
-    href = $("#edit-time-sheet-entry-from-erb").attr("href").replace(/__xxx__/, model.id)
+    #href = $("#edit-time-sheet-entry-from-erb").attr("href").replace(/__xxx__/, model.id)
+    href = @template_url.replace(/__xxx__/, model.id)
     console.log("edit href: " + href)
 
     $.get(href, (data) ->
@@ -13,6 +14,10 @@ class TimeSheet.Views.TimeSheetEntries.EditView extends Backbone.View
   events:
     "submit .edit-timesheetentry": "update"
 
+  constructor: (options) ->
+    super(options)
+    @template_url = options.template_url
+
   update: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -22,7 +27,7 @@ class TimeSheet.Views.TimeSheetEntries.EditView extends Backbone.View
 
     @postViaHtml(form, 
       success: (time_sheet_entry) =>
-        window.time_sheet_router.refreshCollectionAndRenderFor("time_sheet_entries", '/index')
+        window.time_sheet_router.refreshCollectionAndRenderFor("time_sheet_entries", '/tse/index')
 
       error: (jqXHR, status) =>
         @renderHtml(jqXHR.responseText)
