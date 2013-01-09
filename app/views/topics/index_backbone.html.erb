@@ -9,6 +9,9 @@
 
 <div id="topics"></div>
 
+<%= link_to "New Topic (from ERB) Template", new_topic_path(remote: "true"), id: "new-topic-from-erb", style: "display: none;" %>
+<%= link_to "Edit Topic (from ERB) Template", edit_topic_path("__xxx__", remote: "true"), id: "edit-topic-from-erb", style: "display: none;" %>
+
 <script type="text/javascript">
   $(function() {
     // TimeSheet is the app name
@@ -23,13 +26,26 @@
           //   window.router.newTopic()
           //   break;
           case 78:
-            //console.log("load new form")
-            window.router.newTopic()
+            window.router.navigate("/new", {trigger: true});
             break;
           default:
         }
-        //console.log(e.type, e.keyCode)
       }
+
+      if($(".topic-details").length > 0){
+        switch(e.keyCode){
+          // case 69:
+          //   console.log("load edit form")
+          //   window.router.newTopic()
+          //   break;
+          case 66:
+            window.router.navigate("/index", {trigger: true});
+            break;
+          default:
+        }
+      }
+
+      //console.log(e.type, e.keyCode)
     })
   });
 </script>

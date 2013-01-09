@@ -2,7 +2,8 @@ TimeSheet::Application.routes.draw do
 
   #match 'topics/index' => 'topics#index_original'
   resources :topics, controller: :topics_bb
-  resources :topics_bb
+  resources :topics_orig, controller: :topics
+  resources :topics_bb, controller: :topics_bb
 
   resources :time_sheet_entries
 

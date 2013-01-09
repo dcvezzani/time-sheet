@@ -18,6 +18,3 @@ class TimeSheet.Views.Topics.IndexView extends Backbone.View
     @addAll()
 
     return this
-
-  keyHandler: (e) =>
-    console.log(e.type, e.keyCode)

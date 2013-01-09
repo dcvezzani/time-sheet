@@ -3,6 +3,10 @@ class TopicsBbController < TopicsController
   # GET /topics.json
   def index
     @topics = Topic.all
-    render 'index_backbone'
+
+    respond_to do |format|
+      format.html {render 'index_backbone'}
+      format.json { render json: @topics }
+    end
   end
 end

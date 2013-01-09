@@ -1,6 +1,12 @@
-<td class="name"><%= name %></td>
+<td><%= name %></td>
 <td><%= description %></td>
 
-<td><a href="#/<%= id %>">Show</td>
-<td><a href="#/<%= id %>/edit">Edit</td>
-<td><a href="#/<%= id %>/destroy" class="destroy">Destroy</a></td>
+<td>
+  <div class="control-group">
+    <div class="btn-group pull-right">
+      <a class="btn" href="#/<%= id %>" title="Show"> <i class="icon-search"></i> <span class="hidden">Show</span> </a>
+      <a class="btn edit-spouse-<%= id %>" href="#/<%= id %>/edit" title="Edit"> <i class="icon-pencil"></i> <span class="hidden">Edit</span> </a>
+      <a class="btn destroy" href="#/<%= id %>/destroy" title="Destroy"> <i class="icon-trash"></i> <span class="hidden">Destroy</span></a>
+    </div>
+  </div>
+</td>

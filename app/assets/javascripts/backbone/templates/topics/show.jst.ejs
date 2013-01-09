@@ -1,12 +1,21 @@
-<p>
-  <b>Name:</b>
-  <%= name %>
-</p>
+<div class="well well-outline">
+  <div class="page-header">
+  <h1>Show topic <small></small></h1>
+  </div>
 
-<p>
-  <b>Description:</b>
-  <%= description %>
-</p>
+  <div class="topic-details">
+    <p>
+      <b>Name:</b>
+      <%= name %>
+    </p>
 
+    <p>
+      <b>Description:</b>
+      <%= description %>
+    </p>
+  </div>
 
-<a href="#/index">Back</a>
+  <a href="#/<%= id %>/edit">Edit</a>
+  <a href="#/index">Back</a>
+</div>
+
