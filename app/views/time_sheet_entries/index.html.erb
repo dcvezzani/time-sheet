@@ -1,33 +1,54 @@
-<h1>Listing time_sheet_entries</h1>
+<style type="text/css">
+  table th.name{
+    width: 300px;
+  }
+  table td.name{
+    vertical-align: top;
+  }
+</style>
 
-<table>
-  <tr>
-    <th>Starts at</th>
-    <th>Ends at</th>
-    <th>Starts at</th>
-    <th>User</th>
-    <th>Summary</th>
-    <th>Content</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div id="time_sheet_entries"></div>
 
-<% @time_sheet_entries.each do |time_sheet_entry| %>
-  <tr>
-    <td><%= time_sheet_entry.starts_at %></td>
-    <td><%= time_sheet_entry.ends_at %></td>
-    <td><%= time_sheet_entry.starts_at %></td>
-    <td><%= time_sheet_entry.user_id %></td>
-    <td><%= time_sheet_entry.summary %></td>
-    <td><%= time_sheet_entry.content %></td>
-    <td><%= link_to 'Show', time_sheet_entry %></td>
-    <td><%= link_to 'Edit', edit_time_sheet_entry_path(time_sheet_entry) %></td>
-    <td><%= link_to 'Destroy', time_sheet_entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div id="topics"></div>
 
-<br />
+<%= link_to "New Topic (from ERB) Template", new_topic_path, id: "new-topic-from-erb", style: "display: none;" %>
+<%= link_to "Edit Topic (from ERB) Template", edit_topic_path("__xxx__"), id: "edit-topic-from-erb", style: "display: none;" %>
 
-<%= link_to 'New Time sheet entry', new_time_sheet_entry_path %>
+<%= link_to "New Time sheet entry (from ERB) Template", new_time_sheet_entry_path, id: "new-time-sheet-entry-from-erb", style: "display: none;" %>
+<%= link_to "Edit Time sheet entry (from ERB) Template", edit_time_sheet_entry_path("__xxx__"), id: "edit-time-sheet-entry-from-erb", style: "display: none;" %>
+
+<script type="text/javascript">
+  $(function() {
+    // TimeSheet is the app name
+    window.time_sheet_router = new TimeSheet.Routers.TimeSheetEntriesRouter({time_sheet_entries: <%= @time_sheet_entries.to_json.html_safe -%>});
+    window.time_sheet_router.navigate("/tse/index", {trigger: true});
+
+    window.router = new TimeSheet.Routers.TopicsRouter({topics: <%= @topics.to_json.html_safe -%>});
+    window.router.navigate("/index", {trigger: true});
+
+    // $(document).keyup(function(e){
+    //   if($("#time_sheet_entries-table").length > 0){
+    //     switch(e.keyCode){
+    //       case 78: /* 'n' */
+    //         window.time_sheet_router.navigate("/tse/new", {trigger: true});
+    //         break;
+    //       default:
+    //     }
+    //   }
+
+    //   if($(".time-sheet-entry-details").length > 0){
+    //     switch(e.keyCode){
+    //       case 66: /* 'b' */
+    //         window.time_sheet_router.navigate("/tse/index", {trigger: true});
+    //         break;
+    //       default:
+    //     }
+    //   }
+
+    //   //console.log(e.type, e.keyCode)
+    // })
+
+    Backbone.history.start();
+  });
+</script>
+

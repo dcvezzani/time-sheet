@@ -3,6 +3,7 @@ class TimeSheetEntriesController < ApplicationController
   # GET /time_sheet_entries.json
   def index
     @time_sheet_entries = TimeSheetEntry.all
+    @topics = Topic.all
 
     respond_to do |format|
       format.html # index.html.erb

@@ -95,7 +95,9 @@ cp app/view/topics/index.html.rb app/view/topics/index_original.html.rb
 ```
 
 Bootstrap Backbone to the index view.  Include support for shortcut key to create a new item 
-(only activates when index landing zone (lz) exists; e.g., '#topics-table').
+(only activates when index landing zone (lz) exists; e.g., '#topics-table').  Also provide some 
+'template' urls that will be used by the 'new' and 'edit' views to request data processing
+and respond with html data.
 
 E.g., app/view/topics/index_backbone.html.erb
 
@@ -110,6 +112,9 @@ E.g., app/view/topics/index_backbone.html.erb
 </style>
 
 <div id="topics"></div>
+
+<%= link_to "New Topic (from ERB) Template", new_topic_path, id: "new-topic-from-erb", style: "display: block;" %>
+<%= link_to "Edit Topic (from ERB) Template", edit_topic_path("__xxx__"), id: "edit-topic-from-erb", style: "display: block;" %>
 
 <script type="text/javascript">
   $(function() {
@@ -225,7 +230,7 @@ E.g., app/assets/javascripts/backbone/templates/topics/topic.js.ejs
   <div class="control-group">
     <div class="btn-group pull-right">
       <a class="btn" href="#/<%= id %>" title="Show"> <i class="icon-search"></i> <span class="hidden">Show</span> </a>
-      <a class="btn edit-spouse-<%= id %>" href="#/<%= id %>/edit" title="Edit"> <i class="icon-pencil"></i> <span class="hidden">Edit</span> </a>
+      <a class="btn edit-entry-<%= id %>" href="#/<%= id %>/edit" title="Edit"> <i class="icon-pencil"></i> <span class="hidden">Edit</span> </a>
       <a class="btn destroy" href="#/<%= id %>/destroy" title="Destroy"> <i class="icon-trash"></i> <span class="hidden">Destroy</span></a>
     </div>
   </div>
@@ -365,7 +370,7 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
         window.router.refreshCollectionAndRenderFor("topics", '/index')
 
       error: (jqXHR, status) =>
-        @renderHtml(jqXHR.responseText)
+        @render(jqXHR.responseText)
     )
 
   ###
@@ -376,15 +381,17 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
   render: Backbone.View.renderContent
 ```
 
-Next we need to tweak the ```Back``` link so that it includes the necessary anchor for Backbone.
+Next we need to tweak the ```Back``` link so that it includes the necessary anchor for Backbone.  The rest of the url is determined
+using the 'url' configuration setting in the Backbone model.
 
 E.g., app/views/topics/new.html.erb
 
 ```
-<%= link_to 'Back', topics_path(anchor: "/index") %>
+<%= link_to 'Back', "#/index" %>
+
 ```
 
-Now we start applying Twitter Bootstrap design elements to our Rails view.
+Now apply Twitter Bootstrap design elements to the Rails view.
 
 E.g., app/views/topics/new.html.erb
 
@@ -396,7 +403,7 @@ E.g., app/views/topics/new.html.erb
 
   <%= render 'form' %>
 
-  <%= link_to 'Back', topics_path(anchor: "/index") %>
+  <%= link_to 'Back', "#/index" %>
 </div>
 ```
 
@@ -516,8 +523,8 @@ E.g., app/assets/javascripts/backbone/views/topics/edit_view.js.coffee
       success: (topic) =>
         window.router.refreshCollectionAndRenderFor("topics", '/index')
 
-      error: (topic, jqXHR) =>
-        self.renderHtml(form, jqXHR.responseText)
+      error: (jqXHR, status) =>
+        @render(form, jqXHR.responseText)
     )
 ```
 
@@ -598,7 +605,7 @@ E.g., app/views/topics/index_backbone.html.erb
     $(document).keyup(function(e){
       if($("#topics-table").length > 0){
         switch(e.keyCode){
-          case 78: # 'n'
+          case 78: /* 'n' */
             window.router.navigate("/new", {trigger: true});
             break;
           default:
@@ -607,7 +614,7 @@ E.g., app/views/topics/index_backbone.html.erb
 
       if($(".topic-details").length > 0){
         switch(e.keyCode){
-          case 66: # 'b'
+          case 66: /* 'b' */
             window.router.navigate("/index", {trigger: true});
             break;
           default:

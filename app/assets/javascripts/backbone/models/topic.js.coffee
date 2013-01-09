@@ -20,4 +20,4 @@ class TimeSheet.Models.Topic extends Backbone.Model
 
 class TimeSheet.Collections.TopicsCollection extends Backbone.Collection
   model: TimeSheet.Models.Topic
-  url: '/topics_bb'
+  url: '/topics'

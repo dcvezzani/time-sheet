@@ -1,0 +1,16 @@
+<td><%= starts_at %></td>
+<td><%= ends_at %></td>
+<td><%= starts_at %></td>
+<td><%= user_id %></td>
+<td><%= summary %></td>
+<td><%= content %></td>
+
+<td>
+  <div class="control-group">
+    <div class="btn-group pull-right">
+      <a class="btn" href="#/tse/<%= id %>" title="Show"> <i class="icon-search"></i> <span class="hidden">Show</span> </a>
+      <a class="btn edit-entry-<%= id %>" href="#/tse/<%= id %>/edit" title="Edit"> <i class="icon-pencil"></i> <span class="hidden">Edit</span> </a>
+      <a class="btn destroy" href="#/tse/<%= id %>/destroy" title="Destroy"> <i class="icon-trash"></i> <span class="hidden">Destroy</span></a>
+    </div>
+  </div>
+</td>
