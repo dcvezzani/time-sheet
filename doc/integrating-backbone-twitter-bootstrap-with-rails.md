@@ -347,10 +347,12 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
       callback(data)
     )
   )
-  ...
+
   events:
     "submit .new-topic": "save"
+
   ...
+
   save: (e) ->
     e.preventDefault()
     e.stopPropagation()
@@ -365,18 +367,13 @@ class TimeSheet.Views.Topics.NewView extends Backbone.View
       error: (jqXHR, status) =>
         @renderHtml(jqXHR.responseText)
     )
-  ...
-  render: ->
-    self = this
-    @template(@model.toJSON(), (html) -> 
-      self.$el.html(html)
 
-      setTimeout(->
-        self.afterRender()
-      50)
-    )
+  ###
+  afterRender: ->
+    $("#topic_name").focus().select()
+  ###
 
-    return self
+  render: Backbone.View.renderContent
 ```
 
 Next we need to tweak the ```Back``` link so that it includes the necessary anchor for Backbone.
